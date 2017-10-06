@@ -1,0 +1,28 @@
+{
+    "name": "backend",
+    "version": "1.0.0",
+    "description": "a student resource api",
+    "main": "index.js",
+    "private": true,
+    "scripts": {
+        "test": "mocha ",
+        "start": "nodemon index.js"
+    },
+    "keywords": [
+        "students"
+    ],
+    "author": "Steven Daniel, dstevie9292@gmail.com",
+    "license": "MIT",
+    "dependencies": {
+        "body-parser": "^1.18.2",
+        "config": "^1.26.2",
+        "express": "^4.16.1",
+        "mongoose": "^4.12.0",
+        "morgan": "^1.9.0"
+    },
+    "devDependencies": {
+        "chai": "^4.1.2",
+        "chai-http": "^3.0.0",
+        "mocha": "^4.0.1"
+    }
+}
