@@ -18,7 +18,9 @@ mongoose.Promise = global.Promise;
 mongoose.connect(config.DBHost, options);
 
 //Setting Up MiddleWare
-app.use(morgan(':method :url :status :response-time ms - :res[content-length]'));
+if (process.env.NODE_ENV !== 'test') {
+    app.use(morgan(':method :url :status :response-time ms - :res[content-length]'));
+}
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 // Routing
