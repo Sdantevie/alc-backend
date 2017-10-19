@@ -5,16 +5,20 @@ const Schema = mongoose.Schema;
 
 //Setting Up Schema
 const StudentSchema = new Schema({
-    firstName: {
-        type: String,
-        required: true
+    name: {
+        type: String
     },
-    lastName: {
-        type: String,
-        required: true
+    school: {
+        type: String
     },
-    dateOfBirth: {
-        type: Date,
+    course: {
+        type: String,
+    },
+    subject: {
+        type: String
+    },
+    link: {
+        type: String
     },
     createdOn: {
         type: Date,

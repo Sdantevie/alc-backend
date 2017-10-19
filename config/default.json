@@ -1,3 +1,5 @@
 {
-    "DBHost": "mongodb://localhost:27017/alc" //local
+    "DBHost": "mongodb://localhost:27017/alc", //local
+    // "DBHost": "mongodb://steve:skoobybi0la@ds123725.mlab.com:23725/alc", //hosted
+    "SecretKey": "theKingsBusiness"
 }
