@@ -7,8 +7,13 @@ const mongoose = require('mongoose'),
 
 //the Controls
 exports.getStudents = (req, res) => {
-    Students.find({}, (err, students) => {
-        err ? res.send(err) : res.json(students);
+    const token = req.body.token || req.query.token || req.headers['x-access-token'];
+    jwt.verify(token, config.SecretKey, (err, decoded) => {
+        err ? res.status(403).json({ message: 'No Token Provided' }) :
+            Students.find({}, (err, students) => {
+                console.log();
+                err ? res.send(err) : res.json({ student: "Hello", data: students });
+            });
     });
 };
 
@@ -32,9 +37,15 @@ exports.updateStudent = (req, res) => {
     });
 }
 
-exports.getStudent = (req, res) => {
-    Students.findById({ _id: req.params.id }, (err, student) => {
-        err ? res.send(err) : res.json(student);
+// exports.getStudentByID = (req, res) => {
+//     Students.findById({ _id: req.params.id }, (err, student) => {
+//         err ? res.send(err) : res.json(student);
+//     });
+// };
+
+exports.getStudentByName = (req, res) => {
+    Students.find({ name: new RegExp(req.params.name, 'i') }, (err, students) => {
+        err ? res.send(err) : res.json(students);
     });
 };
 
@@ -44,8 +55,9 @@ exports.deleteStudent = (req, res) => {
     });
 }
 
+
 exports.authenticate = (req, res) => {
-    req.body.name === 'Student Resource Center' ?
+    req.body.name === config.SecretKey ?
         jwt.sign(req.body, config.SecretKey, { expiresIn: 86400 }, (err, token) => {
             let response = {
                 message: 'Authorized',
@@ -55,4 +67,15 @@ exports.authenticate = (req, res) => {
         }) :
         res.status(500).send({ message: 'Not Authorized' });
 
+}
+
+exports.findbyQuery = (req, res) => {
+    Students.find({
+        $or: [
+            { name: new RegExp(req.params.name, 'i') },
+            { subject: new RegExp(req.params.name, 'i') }
+        ]
+    }, (err, students) => {
+        err ? res.send(err) : res.json(students);
+    });
 }
