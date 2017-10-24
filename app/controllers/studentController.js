@@ -12,11 +12,12 @@ exports.getStudents = (req, res) => {
         err ? res.status(403).json({ message: 'No Token Provided' }) :
             Students.find({}, (err, students) => {
                 console.log();
-                err ? res.send(err) : res.json({ student: "Hello", data: students });
+                err ? res.send(err) : res.json(students);
             });
     });
 };
 
+//this will create a new document.
 exports.postStudent = (req, res) => {
     let newStudent = new Students(req.body);
     const token = req.body.token || req.query.token || req.headers['x-access-token'];
@@ -28,6 +29,7 @@ exports.postStudent = (req, res) => {
     });
 };
 
+// this will edit any document matched the param id.
 exports.updateStudent = (req, res) => {
     Students.findById({ _id: req.params.id }, (err, student) => {
         err ? res.send(err) :
@@ -37,25 +39,51 @@ exports.updateStudent = (req, res) => {
     });
 }
 
-// exports.getStudentByID = (req, res) => {
-//     Students.findById({ _id: req.params.id }, (err, student) => {
-//         err ? res.send(err) : res.json(student);
-//     });
-// };
-
+//this will return documents of the student.
 exports.getStudentByName = (req, res) => {
-    Students.find({ name: new RegExp(req.params.name, 'i') }, (err, students) => {
-        err ? res.send(err) : res.json(students);
+    const token = req.body.token || req.query.token || req.headers['x-access-token'];
+    jwt.verify(token, config.SecretKey, (err, decoded) => {
+        Students.find({ name: new RegExp(req.params.name, 'i') }, (err, students) => {
+            err ? res.send(err) : res.json(students);
+        });
     });
 };
 
-exports.deleteStudent = (req, res) => {
+exports.getStudentById = (req, res) => {
+    const token = req.body.token || req.query.token || req.headers['x-access-token'];
+    jwt.verify(token, config.SecretKey, (err, decoded) => {
+        Students.findById({ _id: req.params.id }, (err, students) => {
+            err ? res.send(err) : res.json(students);
+        });
+    });
+};
+
+
+//this totally removes everything from the database
+exports.deleteResource = (req, res) => {
     Students.remove({ _id: req.params.id }, (err, student) => {
         err ? res.send(err) : res.json(student);
     });
 }
 
+//this deletes the student but still maintains the resources.
+exports.deleteStudent = (req, res) => {
+    Students.findById({ _id: req.params.id }, (err, student) => {
+        let body = {
+            name: "",
+            school: "",
+            course: "",
+            subject: student.subject,
+            link: student.link,
+        };
+        err ? res.send(err) :
+            Object.assign(student, body).save((err, student) => {
+                err ? res.send(err) : res.json(student);
+            });
+    });
+}
 
+//this ensures that this api is only visited by the student resource center
 exports.authenticate = (req, res) => {
     req.body.name === config.SecretKey ?
         jwt.sign(req.body, config.SecretKey, { expiresIn: 86400 }, (err, token) => {
@@ -69,13 +97,26 @@ exports.authenticate = (req, res) => {
 
 }
 
+//this will return documents whose name and subject contains the search param
 exports.findbyQuery = (req, res) => {
-    Students.find({
-        $or: [
-            { name: new RegExp(req.params.name, 'i') },
-            { subject: new RegExp(req.params.name, 'i') }
-        ]
-    }, (err, students) => {
-        err ? res.send(err) : res.json(students);
+    const token = req.body.token || req.query.token || req.headers['x-access-token'];
+    jwt.verify(token, config.SecretKey, (err, decoded) => {
+        Students.find({
+            $or: [
+                { name: new RegExp(req.params.name, 'i') },
+                { subject: new RegExp(req.params.name, 'i') }
+            ]
+        }, (err, students) => {
+            err ? res.send(err) : res.json(students);
+        });
     });
 }
+
+
+// const thefilter = (docs) => {
+//     let returnee = docs.map((doc) => {
+//         doc.name === '' ? doc.message = 'a Resource' : doc.message = 'Dual Resource';
+//         return doc;
+//     });
+//     console.log(returnee);
+// }
