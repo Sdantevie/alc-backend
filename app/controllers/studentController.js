@@ -66,23 +66,6 @@ exports.deleteResource = (req, res) => {
     });
 }
 
-//this deletes the student but still maintains the resources.
-exports.deleteStudent = (req, res) => {
-    Students.findById({ _id: req.params.id }, (err, student) => {
-        let body = {
-            name: "",
-            school: "",
-            course: "",
-            subject: student.subject,
-            link: student.link,
-        };
-        err ? res.send(err) :
-            Object.assign(student, body).save((err, student) => {
-                err ? res.send(err) : res.json(student);
-            });
-    });
-}
-
 //this ensures that this api is only visited by the student resource center
 exports.authenticate = (req, res) => {
     req.body.name === config.SecretKey ?
@@ -96,27 +79,3 @@ exports.authenticate = (req, res) => {
         res.status(500).send({ message: 'Not Authorized' });
 
 }
-
-//this will return documents whose name and subject contains the search param
-exports.findbyQuery = (req, res) => {
-    const token = req.body.token || req.query.token || req.headers['x-access-token'];
-    jwt.verify(token, config.SecretKey, (err, decoded) => {
-        Students.find({
-            $or: [
-                { name: new RegExp(req.params.name, 'i') },
-                { subject: new RegExp(req.params.name, 'i') }
-            ]
-        }, (err, students) => {
-            err ? res.send(err) : res.json(students);
-        });
-    });
-}
-
-
-// const thefilter = (docs) => {
-//     let returnee = docs.map((doc) => {
-//         doc.name === '' ? doc.message = 'a Resource' : doc.message = 'Dual Resource';
-//         return doc;
-//     });
-//     console.log(returnee);
-// }
