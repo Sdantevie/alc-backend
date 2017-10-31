@@ -1,4 +1,5 @@
-# ALC Backend
+# ALC 
+
 
 ## About
 
@@ -9,7 +10,7 @@ Many Improvements can be made on this API but my DOD (definition of done) was th
   - Reading Students Resource
   - Updating and Deleting Students
 
-To see this API at Work, go to [the front-end that answers assesment 2](http://myalcsrc.surge.sh) 
+To see this API at Work, go to [the front-end that answers assesment 2](http://myalcsrc.surge.sh). The code on Github is [here](https://github.com/Sdantevie/thefront)
 
 
 ## Database
@@ -80,6 +81,8 @@ Deletes the Resources that has the given id
 ### /students/get/:name 
 
 Returns all the entries for Students/Resources that has the given name.
+
+
 
 
 
