@@ -79,7 +79,7 @@ Deletes the Resources that has the given id
 
 ### /students/get/:name 
 
-Returns the All entries for Students/Resources that has the given name.
+Returns all the entries for Students/Resources that has the given name.
 
 
 
